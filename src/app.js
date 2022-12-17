@@ -1,6 +1,6 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
-import { getStorage, ref } from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -15,9 +15,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-const myImageRef = ref(storage, "ZdjęcieCV.png");
+// const myImageRef = ref(storage, "ZdjęcieCV.png");
+// const myImg = document.createElement("img");
+// myImg.src = `https://firebasestorage.googleapis.com/v0/b/${myImageRef.bucket}/o/${myImageRef.fullPath}?alt=media`;
+// document.body.appendChild(myImg);
 
-const myImg = document.createElement("img");
-myImg.src = `https://firebasestorage.googleapis.com/v0/b/${myImageRef.bucket}/o/${myImageRef.fullPath}?alt=media`;
-document.body.appendChild(myImg);
+document.getElementById("myBtn").addEventListener("click", () => {
+    const myInput = document.getElementById("myInput");
+    const myStatus = document.getElementById("myStatus");
 
+    const file = myInput.files[0];
+    const myImgRef = ref(storage, file.name);
+    myStatus.innerText = "Przesyłamy!";
+    uploadBytes(myImgRef, file).then(() => {
+        myStatus.innerText = "Przesłano!";
+    });
+})
