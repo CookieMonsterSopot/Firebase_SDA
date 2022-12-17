@@ -23,9 +23,18 @@ const storage = getStorage(app);
 document.getElementById("myBtn").addEventListener("click", () => {
     const myInput = document.getElementById("myInput");
     const myStatus = document.getElementById("myStatus");
-
+    const myFileNameInput = document.getElementById("myFileName");
     const file = myInput.files[0];
-    const myImgRef = ref(storage, file.name);
+
+    let filename = "";
+    if(myFileNameInput.value){
+        filename = myFileNameInput.value;
+    }
+    else {
+        filename = file.name;
+    }
+    
+    const myImgRef = ref(storage, filename);
     myStatus.innerText = "Przesyłamy!";
     uploadBytes(myImgRef, file).then(() => {
         myStatus.innerText = "Przesłano!";
