@@ -19,9 +19,25 @@ const storage = getStorage(app);
 // const myImg = document.createElement("img");
 // myImg.src = `https://firebasestorage.googleapis.com/v0/b/${myImageRef.bucket}/o/${myImageRef.fullPath}?alt=media`;
 // document.body.appendChild(myImg);
+const myInput = document.getElementById("myInput");
+
+myInput.addEventListener("change", () => {
+    const thumbnail = document.getElementById("thumbnail");
+    const file = myInput.files[0];
+    const fileReader = new FileReader();
+
+    fileReader.readAsDataURL(file);
+
+    fileReader.onloadend = function() {
+        thumbnail.src = fileReader.result;
+    }
+
+    console.log(file.name);
+})
+
 
 document.getElementById("myBtn").addEventListener("click", () => {
-    const myInput = document.getElementById("myInput");
+
     const myStatus = document.getElementById("myStatus");
     const myFileNameInput = document.getElementById("myFileName");
     const file = myInput.files[0];
