@@ -1,7 +1,7 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -92,17 +92,41 @@ const db = getFirestore(app);
 
 // loadImages();
 
+// const myName = document.getElementById("myName");
+// const mySurname = document.getElementById("mySurname");
+// const myAge = document.getElementById("myAge");
+// const btn = document.getElementById("myBtn");
+
+// btn.addEventListener("click", () => {
+//     const jkDoc = doc(db, "users", `IdJanaKowalskiego`);
+//     setDoc(jkDoc, {
+//         name: myName.value,
+//         surname: mySurname.value,
+//         //age: myAge.value
+//     }, {
+//         merge: true
+//     });
+// });
+
 const myName = document.getElementById("myName");
 const mySurname = document.getElementById("mySurname");
 const myAge = document.getElementById("myAge");
 const btn = document.getElementById("myBtn");
 
+const jkDoc = doc(db, "users", `IdJanaKowalskiego`);
+getDoc(jkDoc).then(myDoc => {
+    const myObj = myDoc.data();
+    myName.value = myObj.name;
+    mySurname.value = myObj.surname;
+    myAge.value = myObj.age;
+})
+
 btn.addEventListener("click", () => {
-    const jkDoc = doc(db, "users", `${myName.value}_${mySurname.value}`);
     setDoc(jkDoc, {
         name: myName.value,
         surname: mySurname.value,
         age: myAge.value
+    }, {
+        merge: true
     });
 });
-
