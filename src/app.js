@@ -202,5 +202,10 @@ addEmp.addEventListener("click", () => {
         empName.value = "";
         empSurname.value = "";
         empDep.value = "";
+
+        const userQuery = query(employeesRef, where("department", "==", "IT"));
+        getDocs(userQuery).then((docs) => {
+            console.log(docs.size);
+        })
     })
 })
