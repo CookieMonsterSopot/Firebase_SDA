@@ -1,14 +1,14 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
-  authDomain: "sda-firebase-17.firebaseapp.com",
-  projectId: "sda-firebase-17",
-  storageBucket: "sda-firebase-17.appspot.com",
-  messagingSenderId: "494729382300",
-  appId: "1:494729382300:web:ea0ed0f963d32a5e48e059"
+    apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
+    authDomain: "sda-firebase-17.firebaseapp.com",
+    projectId: "sda-firebase-17",
+    storageBucket: "sda-firebase-17.appspot.com",
+    messagingSenderId: "494729382300",
+    appId: "1:494729382300:web:ea0ed0f963d32a5e48e059"
 };
 
 // Initialize Firebase
@@ -48,7 +48,7 @@ const storage = getStorage(app);
 //     else {
 //         filename = file.name;
 //     }
-    
+
 //     const myImgRef = ref(storage, filename);
 //     myStatus.innerText = "Przesyłamy!";
 //     uploadBytes(myImgRef, file).then(() => {
@@ -56,9 +56,20 @@ const storage = getStorage(app);
 //     });
 // })
 
-const imageRef = ref(storage, "image2.jpg");
-getDownloadURL(imageRef).then(url => {
-    const myImg = document.createElement("img");
-    myImg.src = url;
-    document.body.appendChild(myImg);
+// const imageRef = ref(storage, "image2.jpg");
+// getDownloadURL(imageRef).then(url => {
+//     const myImg = document.createElement("img");
+//     myImg.src = url;
+//     document.body.appendChild(myImg);
+// })
+
+const storageRef = ref(storage);
+listAll(storageRef).then(res => {
+    const myOl = document.createElement("ol");
+    res.items.forEach(item => {
+        const myLi = document.createElement("li");
+        myLi.innerText = item.fullPath;
+        myOl.appendChild(myLi);
+    })
+    document.body.appendChild(myOl);
 })
