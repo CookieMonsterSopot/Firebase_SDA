@@ -65,11 +65,18 @@ const storage = getStorage(app);
 
 const storageRef = ref(storage);
 listAll(storageRef).then(res => {
-    const myOl = document.createElement("ol");
     res.items.forEach(item => {
-        const myLi = document.createElement("li");
-        myLi.innerText = item.fullPath;
-        myOl.appendChild(myLi);
+        getDownloadURL(item).then(url => {
+            const myDiv = document.createElement("div");
+            const myImg = document.createElement("img");
+            const myHeader = document.createElement("h3");
+            myImg.src = url;
+
+            myHeader.innerText = item.fullPath;
+            myDiv.appendChild(myImg);
+            myDiv.appendChild(myHeader);
+            document.body.appendChild(myDiv);
+        })
     })
-    document.body.appendChild(myOl);
+
 })
