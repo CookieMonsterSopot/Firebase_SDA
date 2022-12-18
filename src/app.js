@@ -63,28 +63,29 @@ const storage = getStorage(app);
 //     document.body.appendChild(myImg);
 // })
 
-const storageRef = ref(storage);
-listAll(storageRef).then(res => {
-    res.items.forEach(item => {
-        getDownloadURL(item).then(url => {
-            const myDiv = document.createElement("div");
-            const myImg = document.createElement("img");
-            const myHeader = document.createElement("h3");
-            const myButton = document.createElement("button");
-            myButton.innerText = "Usuń";
-            myImg.src = url;
+async function loadImages() {
+    const storageRef = ref(storage);
+    const res = await listAll(storageRef);
+    res.items.forEach(async (item) => {
+        const url = await getDownloadURL(item);
+        const myDiv = document.createElement("div");
+        const myImg = document.createElement("img");
+        const myHeader = document.createElement("h3");
+        const myButton = document.createElement("button");
+        myButton.innerText = "Usuń";
+        myImg.src = url;
 
-            myButton.addEventListener("click", () => {
-                deleteObject(item).then(() => {
-                    document.body.removeChild(myDiv);
-                })
-            });
+        myButton.addEventListener("click", async () => {
+            await deleteObject(item);
+            document.body.removeChild(myDiv);
+        });
 
-            myHeader.innerText = item.fullPath;
-            myDiv.appendChild(myImg);
-            myDiv.appendChild(myHeader);
-            myDiv.appendChild(myButton);
-            document.body.appendChild(myDiv);
-        })
+        myHeader.innerText = item.fullPath;
+        myDiv.appendChild(myImg);
+        myDiv.appendChild(myHeader);
+        myDiv.appendChild(myButton);
+        document.body.appendChild(myDiv);
     })
-})
+}
+
+loadImages();
