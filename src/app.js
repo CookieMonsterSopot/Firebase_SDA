@@ -1,6 +1,6 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
-import { getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -70,13 +70,21 @@ listAll(storageRef).then(res => {
             const myDiv = document.createElement("div");
             const myImg = document.createElement("img");
             const myHeader = document.createElement("h3");
+            const myButton = document.createElement("button");
+            myButton.innerText = "Usuń";
             myImg.src = url;
+
+            myButton.addEventListener("click", () => {
+                deleteObject(item).then(() => {
+                    document.body.removeChild(myDiv);
+                })
+            });
 
             myHeader.innerText = item.fullPath;
             myDiv.appendChild(myImg);
             myDiv.appendChild(myHeader);
+            myDiv.appendChild(myButton);
             document.body.appendChild(myDiv);
         })
     })
-
 })
