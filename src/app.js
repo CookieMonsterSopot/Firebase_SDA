@@ -1,6 +1,7 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -14,8 +15,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
+const db = getFirestore(app);
 
-// const myImageRef = ref(storage, "ZdjęcieCV.png");
+// const myImageRef = ref(storage, "nazwaFolder/ZdjęcieCV.png");
 // const myImg = document.createElement("img");
 // myImg.src = `https://firebasestorage.googleapis.com/v0/b/${myImageRef.bucket}/o/${myImageRef.fullPath}?alt=media`;
 // document.body.appendChild(myImg);
@@ -63,29 +65,44 @@ const storage = getStorage(app);
 //     document.body.appendChild(myImg);
 // })
 
-async function loadImages() {
-    const storageRef = ref(storage);
-    const res = await listAll(storageRef);
-    res.items.forEach(async (item) => {
-        const url = await getDownloadURL(item);
-        const myDiv = document.createElement("div");
-        const myImg = document.createElement("img");
-        const myHeader = document.createElement("h3");
-        const myButton = document.createElement("button");
-        myButton.innerText = "Usuń";
-        myImg.src = url;
+// async function loadImages() {
+//     const storageRef = ref(storage);
+//     const res = await listAll(storageRef);
+//     res.items.forEach(async (item) => {
+//         const url = await getDownloadURL(item);
+//         const myDiv = document.createElement("div");
+//         const myImg = document.createElement("img");
+//         const myHeader = document.createElement("h3");
+//         const myButton = document.createElement("button");
+//         myButton.innerText = "Usuń";
+//         myImg.src = url;
 
-        myButton.addEventListener("click", async () => {
-            await deleteObject(item);
-            document.body.removeChild(myDiv);
-        });
+//         myButton.addEventListener("click", async () => {
+//             await deleteObject(item);
+//             document.body.removeChild(myDiv);
+//         });
 
-        myHeader.innerText = item.fullPath;
-        myDiv.appendChild(myImg);
-        myDiv.appendChild(myHeader);
-        myDiv.appendChild(myButton);
-        document.body.appendChild(myDiv);
-    })
-}
+//         myHeader.innerText = item.fullPath;
+//         myDiv.appendChild(myImg);
+//         myDiv.appendChild(myHeader);
+//         myDiv.appendChild(myButton);
+//         document.body.appendChild(myDiv);
+//     })
+// }
 
-loadImages();
+// loadImages();
+
+const myName = document.getElementById("myName");
+const mySurname = document.getElementById("mySurname");
+const myAge = document.getElementById("myAge");
+const btn = document.getElementById("myBtn");
+
+btn.addEventListener("click", () => {
+    const jkDoc = doc(db, "users", `${myName.value}_${mySurname.value}`);
+    setDoc(jkDoc, {
+        name: myName.value,
+        surname: mySurname.value,
+        age: myAge.value
+    });
+});
+
