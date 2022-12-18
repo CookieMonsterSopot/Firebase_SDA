@@ -1,6 +1,6 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -19,40 +19,46 @@ const storage = getStorage(app);
 // const myImg = document.createElement("img");
 // myImg.src = `https://firebasestorage.googleapis.com/v0/b/${myImageRef.bucket}/o/${myImageRef.fullPath}?alt=media`;
 // document.body.appendChild(myImg);
-const myInput = document.getElementById("myInput");
+// const myInput = document.getElementById("myInput");
 
-myInput.addEventListener("change", () => {
-    const thumbnail = document.getElementById("thumbnail");
-    const file = myInput.files[0];
-    const fileReader = new FileReader();
+// myInput.addEventListener("change", () => {
+//     const thumbnail = document.getElementById("thumbnail");
+//     const file = myInput.files[0];
+//     const fileReader = new FileReader();
 
-    fileReader.readAsDataURL(file);
+//     fileReader.readAsDataURL(file);
 
-    fileReader.onloadend = function() {
-        thumbnail.src = fileReader.result;
-    }
+//     fileReader.onloadend = function() {
+//         thumbnail.src = fileReader.result;
+//     }
 
-    console.log(file.name);
-})
+//     console.log(file.name);
+// })
 
 
-document.getElementById("myBtn").addEventListener("click", () => {
+// document.getElementById("myBtn").addEventListener("click", () => {
+//     const myStatus = document.getElementById("myStatus");
+//     const myFileNameInput = document.getElementById("myFileName");
+//     const file = myInput.files[0];
 
-    const myStatus = document.getElementById("myStatus");
-    const myFileNameInput = document.getElementById("myFileName");
-    const file = myInput.files[0];
-
-    let filename = "";
-    if(myFileNameInput.value){
-        filename = myFileNameInput.value;
-    }
-    else {
-        filename = file.name;
-    }
+//     let filename = "";
+//     if(myFileNameInput.value){
+//         filename = myFileNameInput.value;
+//     }
+//     else {
+//         filename = file.name;
+//     }
     
-    const myImgRef = ref(storage, filename);
-    myStatus.innerText = "Przesyłamy!";
-    uploadBytes(myImgRef, file).then(() => {
-        myStatus.innerText = "Przesłano!";
-    });
+//     const myImgRef = ref(storage, filename);
+//     myStatus.innerText = "Przesyłamy!";
+//     uploadBytes(myImgRef, file).then(() => {
+//         myStatus.innerText = "Przesłano!";
+//     });
+// })
+
+const imageRef = ref(storage, "image2.jpg");
+getDownloadURL(imageRef).then(url => {
+    const myImg = document.createElement("img");
+    myImg.src = url;
+    document.body.appendChild(myImg);
 })
