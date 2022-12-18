@@ -167,21 +167,40 @@ const db = getFirestore(app);
 //     });
 // });
 
-const myQueryName = document.getElementById("queryName");
-const findBtn = document.getElementById("findBtn");
-const usersList = document.getElementById("usersList");
+// const myQueryName = document.getElementById("queryName");
+// const findBtn = document.getElementById("findBtn");
+// const usersList = document.getElementById("usersList");
 
-const usersRef = collection(db, "users");
+// const usersRef = collection(db, "users");
 
-findBtn.addEventListener("click", () => {
-    usersList.innerHTML = "";
-    const userQuery = query(usersRef, where("name", "==", myQueryName.value));
-    getDocs(userQuery).then((docs) => {
-        docs.forEach(userDoc => {
-            const user = userDoc.data();
-            const userListItem = document.createElement("li");
-            userListItem.innerText = `${user.name} ${user.surname}`;
-            usersList.appendChild(userListItem);
-        })
+// findBtn.addEventListener("click", () => {
+//     usersList.innerHTML = "";
+//     const userQuery = query(usersRef, where("name", "==", myQueryName.value));
+//     getDocs(userQuery).then((docs) => {
+//         docs.forEach(userDoc => {
+//             const user = userDoc.data();
+//             const userListItem = document.createElement("li");
+//             userListItem.innerText = `${user.name} ${user.surname}`;
+//             usersList.appendChild(userListItem);
+//         })
+//     })
+// })
+
+
+const empName = document.getElementById("name");
+const empSurname = document.getElementById("surname");
+const empDep = document.getElementById("department");
+const addEmp = document.getElementById("addEmployee");
+
+addEmp.addEventListener("click", () => {
+    const employeesRef = collection(db, "employees");
+    addDoc(employeesRef, {
+        name: empName.value,
+        surname: empSurname.value,
+        department: empDep.value
+    }).then(() => {
+        empName.value = "";
+        empSurname.value = "";
+        empDep.value = "";
     })
 })
