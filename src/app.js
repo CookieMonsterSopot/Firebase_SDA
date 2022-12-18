@@ -1,7 +1,7 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -98,35 +98,46 @@ const db = getFirestore(app);
 // const btn = document.getElementById("myBtn");
 
 // btn.addEventListener("click", () => {
-//     const jkDoc = doc(db, "users", `IdJanaKowalskiego`);
+//     const usersCollection = collection(db, "users");
+//     addDoc(usersCollection, {
+//         name: myName.value,
+//         surname: mySurname.value,
+//         age: myAge.value
+//     });
+// });
+
+// const myName = document.getElementById("myName");
+// const mySurname = document.getElementById("mySurname");
+// const myAge = document.getElementById("myAge");
+// const btn = document.getElementById("myBtn");
+
+// const jkDoc = doc(db, "users", `IdJanaKowalskiego`);
+// getDoc(jkDoc).then(myDoc => {
+//     const myObj = myDoc.data();
+//     myName.value = myObj.name;
+//     mySurname.value = myObj.surname;
+//     myAge.value = myObj.age;
+// })
+
+// btn.addEventListener("click", () => {
 //     setDoc(jkDoc, {
 //         name: myName.value,
 //         surname: mySurname.value,
-//         //age: myAge.value
+//         age: myAge.value
 //     }, {
 //         merge: true
 //     });
 // });
 
-const myName = document.getElementById("myName");
-const mySurname = document.getElementById("mySurname");
-const myAge = document.getElementById("myAge");
-const btn = document.getElementById("myBtn");
+const usersCollection = collection(db, "users");
+getDocs(usersCollection).then(docs => {
+    const myOl = document.createElement("ol");
+    docs.forEach((doc) => {
+        const myObj = doc.data();
+        const myLi = document.createElement("li");
+        myLi.innerText = `${myObj.name} ${myObj.surname}`;
 
-const jkDoc = doc(db, "users", `IdJanaKowalskiego`);
-getDoc(jkDoc).then(myDoc => {
-    const myObj = myDoc.data();
-    myName.value = myObj.name;
-    mySurname.value = myObj.surname;
-    myAge.value = myObj.age;
-})
-
-btn.addEventListener("click", () => {
-    setDoc(jkDoc, {
-        name: myName.value,
-        surname: mySurname.value,
-        age: myAge.value
-    }, {
-        merge: true
+        myOl.appendChild(myLi);
     });
-});
+    document.body.appendChild(myOl);
+})
