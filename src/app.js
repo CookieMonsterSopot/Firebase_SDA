@@ -1,7 +1,7 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -129,15 +129,40 @@ const db = getFirestore(app);
 //     });
 // });
 
+const myName = document.getElementById("myName");
+const mySurname = document.getElementById("mySurname");
+const myAge = document.getElementById("myAge");
+const btn = document.getElementById("myBtn");
+let myDoc;
+
 const usersCollection = collection(db, "users");
 getDocs(usersCollection).then(docs => {
     const myOl = document.createElement("ol");
     docs.forEach((doc) => {
         const myObj = doc.data();
         const myLi = document.createElement("li");
+        const editBtn = document.createElement("button");
+        editBtn.innerText = "Edit";
         myLi.innerText = `${myObj.name} ${myObj.surname}`;
+        myLi.appendChild(editBtn);
+
+        editBtn.addEventListener("click", () => {
+            myName.value = myObj.name;
+            mySurname.value = myObj.surname;
+            myAge.value = myObj.age;
+            myDoc = doc.ref;
+        })
 
         myOl.appendChild(myLi);
     });
     document.body.appendChild(myOl);
 })
+
+
+btn.addEventListener("click", () => {
+    updateDoc(myDoc, {
+        name: myName.value,
+        surname: mySurname.value,
+        age: myAge.value
+    });
+});
