@@ -347,6 +347,7 @@ const rtdb = getDatabase(app);
 const name = document.getElementById("name");
 const addBtn = document.getElementById("addBtn");
 const docsList = document.getElementById("docsList");
+const docText = document.getElementById("docText");
 const docsRef = rtref(rtdb, `docs`);
 
 addBtn.addEventListener("click", () => {    
@@ -364,6 +365,18 @@ onChildAdded(docsRef, (docSnapshot) => {
     li.innerText = `${myDoc.name}`;
 
     const btnEdit = document.createElement("button");
+    btnEdit.addEventListener("click", () => {
+        onValue(docSnapshot.ref, (currSnapshot) => {
+            docText.innerText = currSnapshot.val().text;
+        });
+        
+        docText.addEventListener('change', () => {
+            update(docSnapshot.ref, {
+                text: docText.value
+            })
+        })
+    })
+
     btnEdit.innerText = "Edit";
     li.appendChild(btnEdit);
 
