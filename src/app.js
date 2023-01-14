@@ -1,7 +1,8 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { getDatabase, ref as rtref, set } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -9,13 +10,15 @@ const firebaseConfig = {
     projectId: "sda-firebase-17",
     storageBucket: "sda-firebase-17.appspot.com",
     messagingSenderId: "494729382300",
-    appId: "1:494729382300:web:ea0ed0f963d32a5e48e059"
+    appId: "1:494729382300:web:ea0ed0f963d32a5e48e059",
+    databaseURL: "https://sda-firebase-17-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const db = getFirestore(app);
+const rtdb = getDatabase(app);
 
 // const myImageRef = ref(storage, "nazwaFolder/ZdjęcieCV.png");
 // const myImg = document.createElement("img");
@@ -265,37 +268,54 @@ const db = getFirestore(app);
 // })
 
 
-const seconds = document.getElementById('seconds');
-const stoperDoc = doc(db, 'stopers', 'stoper');
-onSnapshot(stoperDoc, (doc) => {
-    seconds.innerText = doc.data().seconds;
-})
+// const seconds = document.getElementById('seconds');
+// const stoperDoc = doc(db, 'stopers', 'stoper');
+// onSnapshot(stoperDoc, (doc) => {
+//     seconds.innerText = doc.data().seconds;
+// })
 
-let intervalId;
-let i = 0;
+// let intervalId;
+// let i = 0;
 
-const start = document.getElementById('start');
-const reset = document.getElementById('reset');
+// const start = document.getElementById('start');
+// const reset = document.getElementById('reset');
 
-start.addEventListener('click', () => {
-    if (intervalId) {
-        clearInterval(intervalId);
-    }
+// start.addEventListener('click', () => {
+//     if (intervalId) {
+//         clearInterval(intervalId);
+//     }
 
-    intervalId = setInterval(() => {
-        i++;
-        setDoc(stoperDoc, {
-            seconds: i
-        });
-    }, 1000);
+//     intervalId = setInterval(() => {
+//         i++;
+//         setDoc(stoperDoc, {
+//             seconds: i
+//         });
+//     }, 1000);
+// });
+
+// reset.addEventListener('click', () => {
+//     if (intervalId) {
+//         clearInterval(intervalId);
+//     }
+//     i = 0;
+//     setDoc(stoperDoc, {
+//         seconds: 0
+//     });
+// });
+
+
+// const myEmpDoc = doc(db, "employees/YOsXnQKfIUZGRF9Qm1wr");
+// deleteDoc(myEmpDoc);
+
+const name = document.getElementById("name");
+const surname = document.getElementById("surname");
+const addBtn = document.getElementById("addBtn");
+
+addBtn.addEventListener("click", () => {
+    const userRef = rtref(rtdb, `users/${name.value}${surname.value}`);
+    set(userRef, {
+        name: name.value,
+        surname: surname.value
+    })
 });
 
-reset.addEventListener('click', () => {
-    if (intervalId) {
-        clearInterval(intervalId);
-    }
-    i = 0;
-    setDoc(stoperDoc, {
-        seconds: 0
-    });
-});
