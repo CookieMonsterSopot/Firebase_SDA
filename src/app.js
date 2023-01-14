@@ -265,15 +265,15 @@ const db = getFirestore(app);
 // })
 
 
-// const albumDoc = doc(db, "stopers/stoper");
-// onSnapshot(albumDoc, (doc) => {
-//     document.body.innerText = JSON.stringify(doc.data());
-// })
-
+const seconds = document.getElementById('seconds');
+const stoperDoc = doc(db, 'stopers', 'stoper');
+onSnapshot(stoperDoc, (doc) => {
+    seconds.innerText = doc.data().seconds;
+})
 
 let intervalId;
 let i = 0;
-const stoperDoc = doc(db, 'stopers', 'stoper');
+
 const start = document.getElementById('start');
 const reset = document.getElementById('reset');
 
