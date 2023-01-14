@@ -1,8 +1,8 @@
 import './../styles/styles.css'
-import { initializeApp } from "firebase/app";
+import { initializeApp, onLog } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
-import { getDatabase, onValue, push, ref as rtref, set, update } from "firebase/database";
+import { getDatabase, onChildAdded, onChildRemoved, onValue, push, ref as rtref, remove, set, update } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -322,12 +322,23 @@ addBtn.addEventListener("click", () => {
 });
 
 const myRef = rtref(rtdb, 'users');
-onValue(myRef, (snapshot) => {
-    usersList.innerHTML = '';
-    snapshot.forEach(userSnapshot => {
-        const user = userSnapshot.val();
-        const li = document.createElement("li");
-        li.innerText = `${user.name} ${user.surname}`;
-        usersList.appendChild(li);
+onChildAdded(myRef, (userSnapshot) => {
+    const user = userSnapshot.val();
+    const li = document.createElement("li");
+    li.innerText = `${user.name} ${user.surname}`;
+    li.id = userSnapshot.key;
+
+    const btnRemove = document.createElement("button");
+    btnRemove.innerText = "Remove";
+    btnRemove.addEventListener('click', () => {
+        remove(userSnapshot.ref);
     })
+    li.appendChild(btnRemove);
+
+    usersList.appendChild(li);
+})
+
+onChildRemoved(myRef, (userSnapshot)=> {
+    const liToRemove = document.getElementById(userSnapshot.key);
+    usersList.removeChild(liToRemove);
 })
