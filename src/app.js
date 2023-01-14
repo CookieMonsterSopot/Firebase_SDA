@@ -186,17 +186,33 @@ const db = getFirestore(app);
 //     })
 // })
 
+class Album {
+    constructor(name, year) {
+        this.name = name;
+        this.year = year;
+    }
+}
+
+const albumConverter = {
+    toFirestore: (album) => {
+        return {
+            name: album.name,
+            year: album.year
+        };
+    },
+    fromFirestore: (snapshot, options) => {
+        const data = snapshot.data(options);
+        return new Album(data.name, data.year);
+    }
+}
 
 const albumName = document.getElementById("name");
 const albumYear = document.getElementById("year");
 const addAlbum = document.getElementById("addAlbum");
 
 addAlbum.addEventListener("click", () => {
-    const albumsRef = collection(db, "albums");
-    addDoc(albumsRef, {
-        name: albumName.value,
-        year: albumYear.value
-    })
+    const albumsRef = collection(db, "albums").withConverter(albumConverter);
+    addDoc(albumsRef, new Album(albumName.value, albumYear.value));
 })
 
 const photoFile = document.getElementById('photoFile');
@@ -223,7 +239,7 @@ getDocs(albumsCollection).then(docs => {
             const albumRef = ref(storage, doc.id);
             document.getElementById('photos').innerHTML = '';
 
-            listAll(albumRef).then((res) => {         
+            listAll(albumRef).then((res) => {
                 res.items.forEach(item => {
                     getDownloadURL(item).then(url => {
                         const myImg = document.createElement("img");
@@ -247,3 +263,5 @@ addPhotoBtn.addEventListener('click', () => {
     const fileRef = ref(storage, `${albumId.value}/${file.name}`);
     uploadBytes(fileRef, file);
 })
+
+
