@@ -307,38 +307,65 @@ const rtdb = getDatabase(app);
 // const myEmpDoc = doc(db, "employees/YOsXnQKfIUZGRF9Qm1wr");
 // deleteDoc(myEmpDoc);
 
-const name = document.getElementById("name");
-const surname = document.getElementById("surname");
-const addBtn = document.getElementById("addBtn");
-const usersList = document.getElementById("usersList");
+// const name = document.getElementById("name");
+// const surname = document.getElementById("surname");
+// const addBtn = document.getElementById("addBtn");
+// const usersList = document.getElementById("usersList");
 
-addBtn.addEventListener("click", () => {
-    const usersRef = rtref(rtdb, `users`);
-    const userRef = push(usersRef);
-    set(userRef, {
+// addBtn.addEventListener("click", () => {
+//     const usersRef = rtref(rtdb, `users`);
+//     const userRef = push(usersRef);
+//     set(userRef, {
+//         name: name.value,
+//         surname: surname.value
+//     })
+// });
+
+// const myRef = rtref(rtdb, 'users');
+// onChildAdded(myRef, (userSnapshot) => {
+//     const user = userSnapshot.val();
+//     const li = document.createElement("li");
+//     li.innerText = `${user.name} ${user.surname}`;
+//     li.id = userSnapshot.key;
+
+//     const btnRemove = document.createElement("button");
+//     btnRemove.innerText = "Remove";
+//     btnRemove.addEventListener('click', () => {
+//         remove(userSnapshot.ref);
+//     })
+//     li.appendChild(btnRemove);
+
+//     usersList.appendChild(li);
+// })
+
+// onChildRemoved(myRef, (userSnapshot)=> {
+//     const liToRemove = document.getElementById(userSnapshot.key);
+//     usersList.removeChild(liToRemove);
+// })
+
+
+const name = document.getElementById("name");
+const addBtn = document.getElementById("addBtn");
+const docsList = document.getElementById("docsList");
+const docsRef = rtref(rtdb, `docs`);
+
+addBtn.addEventListener("click", () => {    
+    const docRef = push(docsRef);
+    set(docRef, {
         name: name.value,
-        surname: surname.value
+        text: ''
     })
 });
 
-const myRef = rtref(rtdb, 'users');
-onChildAdded(myRef, (userSnapshot) => {
-    const user = userSnapshot.val();
+
+onChildAdded(docsRef, (docSnapshot) => {
+    const myDoc = docSnapshot.val();
     const li = document.createElement("li");
-    li.innerText = `${user.name} ${user.surname}`;
-    li.id = userSnapshot.key;
+    li.innerText = `${myDoc.name}`;
 
-    const btnRemove = document.createElement("button");
-    btnRemove.innerText = "Remove";
-    btnRemove.addEventListener('click', () => {
-        remove(userSnapshot.ref);
-    })
-    li.appendChild(btnRemove);
+    const btnEdit = document.createElement("button");
+    btnEdit.innerText = "Edit";
+    li.appendChild(btnEdit);
 
-    usersList.appendChild(li);
-})
-
-onChildRemoved(myRef, (userSnapshot)=> {
-    const liToRemove = document.getElementById(userSnapshot.key);
-    usersList.removeChild(liToRemove);
+    docsList.appendChild(li);
 })
