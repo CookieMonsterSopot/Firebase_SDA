@@ -198,3 +198,31 @@ addAlbum.addEventListener("click", () => {
         year: albumYear.value
     })
 })
+
+const photoFile = document.getElementById('photoFile');
+const albumId = document.getElementById('albumId');
+const addPhotoBtn = document.getElementById('addPhoto');
+
+const albumsCollection = collection(db, "albums");
+getDocs(albumsCollection).then(docs => {
+    const myOl = document.getElementById("albumsList");
+    docs.forEach((doc) => {
+        const myObj = doc.data();
+        const myLi = document.createElement("li");
+
+        const addPhotosBtn = document.createElement("button");
+        const showPhotosBtn = document.createElement("button");
+        addPhotosBtn.innerText = "Add photos";
+        showPhotosBtn.innerText = "Show photos";
+
+        addPhotosBtn.addEventListener('click', () => {
+            albumId.value = doc.id;
+        });
+
+        myLi.innerText = `${myObj.name} ${myObj.year}`;
+        myLi.appendChild(addPhotosBtn);
+        myLi.appendChild(showPhotosBtn);
+
+        myOl.appendChild(myLi);
+    });
+})
