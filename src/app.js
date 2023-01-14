@@ -1,7 +1,7 @@
 import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -186,82 +186,116 @@ const db = getFirestore(app);
 //     })
 // })
 
-class Album {
-    constructor(name, year) {
-        this.name = name;
-        this.year = year;
+// class Album {
+//     constructor(name, year) {
+//         this.name = name;
+//         this.year = year;
+//     }
+// }
+
+// const albumConverter = {
+//     toFirestore: (album) => {
+//         return {
+//             name: album.name,
+//             year: album.year
+//         };
+//     },
+//     fromFirestore: (snapshot, options) => {
+//         const data = snapshot.data(options);
+//         return new Album(data.name, data.year);
+//     }
+// }
+
+// const albumName = document.getElementById("name");
+// const albumYear = document.getElementById("year");
+// const addAlbum = document.getElementById("addAlbum");
+
+// addAlbum.addEventListener("click", () => {
+//     const albumsRef = collection(db, "albums").withConverter(albumConverter);
+//     addDoc(albumsRef, new Album(albumName.value, albumYear.value));
+// })
+
+// const photoFile = document.getElementById('photoFile');
+// const albumId = document.getElementById('albumId');
+// const addPhotoBtn = document.getElementById('addPhoto');
+
+// const albumsCollection = collection(db, "albums");
+// getDocs(albumsCollection).then(docs => {
+//     const myOl = document.getElementById("albumsList");
+//     docs.forEach((doc) => {
+//         const myObj = doc.data();
+//         const myLi = document.createElement("li");
+
+//         const addPhotosBtn = document.createElement("button");
+//         const showPhotosBtn = document.createElement("button");
+//         addPhotosBtn.innerText = "Add photos";
+//         showPhotosBtn.innerText = "Show photos";
+
+//         addPhotosBtn.addEventListener('click', () => {
+//             albumId.value = doc.id;
+//         });
+
+//         showPhotosBtn.addEventListener('click', () => {
+//             const albumRef = ref(storage, doc.id);
+//             document.getElementById('photos').innerHTML = '';
+
+//             listAll(albumRef).then((res) => {
+//                 res.items.forEach(item => {
+//                     getDownloadURL(item).then(url => {
+//                         const myImg = document.createElement("img");
+//                         myImg.src = url;
+//                         document.getElementById('photos').appendChild(myImg);
+//                     })
+//                 })
+//             })
+//         });
+
+//         myLi.innerText = `${myObj.name} ${myObj.year}`;
+//         myLi.appendChild(addPhotosBtn);
+//         myLi.appendChild(showPhotosBtn);
+
+//         myOl.appendChild(myLi);
+//     });
+// })
+
+// addPhotoBtn.addEventListener('click', () => {
+//     const file = photoFile.files[0];
+//     const fileRef = ref(storage, `${albumId.value}/${file.name}`);
+//     uploadBytes(fileRef, file);
+// })
+
+
+// const albumDoc = doc(db, "stopers/stoper");
+// onSnapshot(albumDoc, (doc) => {
+//     document.body.innerText = JSON.stringify(doc.data());
+// })
+
+
+let intervalId;
+let i = 0;
+const stoperDoc = doc(db, 'stopers', 'stoper');
+const start = document.getElementById('start');
+const reset = document.getElementById('reset');
+
+start.addEventListener('click', () => {
+    if (intervalId) {
+        clearInterval(intervalId);
     }
-}
 
-const albumConverter = {
-    toFirestore: (album) => {
-        return {
-            name: album.name,
-            year: album.year
-        };
-    },
-    fromFirestore: (snapshot, options) => {
-        const data = snapshot.data(options);
-        return new Album(data.name, data.year);
+    intervalId = setInterval(() => {
+        i++;
+        setDoc(stoperDoc, {
+            seconds: i
+        });
+    }, 1000);
+});
+
+reset.addEventListener('click', () => {
+    if (intervalId) {
+        clearInterval(intervalId);
     }
-}
-
-const albumName = document.getElementById("name");
-const albumYear = document.getElementById("year");
-const addAlbum = document.getElementById("addAlbum");
-
-addAlbum.addEventListener("click", () => {
-    const albumsRef = collection(db, "albums").withConverter(albumConverter);
-    addDoc(albumsRef, new Album(albumName.value, albumYear.value));
-})
-
-const photoFile = document.getElementById('photoFile');
-const albumId = document.getElementById('albumId');
-const addPhotoBtn = document.getElementById('addPhoto');
-
-const albumsCollection = collection(db, "albums");
-getDocs(albumsCollection).then(docs => {
-    const myOl = document.getElementById("albumsList");
-    docs.forEach((doc) => {
-        const myObj = doc.data();
-        const myLi = document.createElement("li");
-
-        const addPhotosBtn = document.createElement("button");
-        const showPhotosBtn = document.createElement("button");
-        addPhotosBtn.innerText = "Add photos";
-        showPhotosBtn.innerText = "Show photos";
-
-        addPhotosBtn.addEventListener('click', () => {
-            albumId.value = doc.id;
-        });
-
-        showPhotosBtn.addEventListener('click', () => {
-            const albumRef = ref(storage, doc.id);
-            document.getElementById('photos').innerHTML = '';
-
-            listAll(albumRef).then((res) => {
-                res.items.forEach(item => {
-                    getDownloadURL(item).then(url => {
-                        const myImg = document.createElement("img");
-                        myImg.src = url;
-                        document.getElementById('photos').appendChild(myImg);
-                    })
-                })
-            })
-        });
-
-        myLi.innerText = `${myObj.name} ${myObj.year}`;
-        myLi.appendChild(addPhotosBtn);
-        myLi.appendChild(showPhotosBtn);
-
-        myOl.appendChild(myLi);
+    i = 0;
+    setDoc(stoperDoc, {
+        seconds: 0
     });
-})
-
-addPhotoBtn.addEventListener('click', () => {
-    const file = photoFile.files[0];
-    const fileRef = ref(storage, `${albumId.value}/${file.name}`);
-    uploadBytes(fileRef, file);
-})
-
-
+});
