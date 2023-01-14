@@ -219,10 +219,31 @@ getDocs(albumsCollection).then(docs => {
             albumId.value = doc.id;
         });
 
+        showPhotosBtn.addEventListener('click', () => {
+            const albumRef = ref(storage, doc.id);
+            document.getElementById('photos').innerHTML = '';
+
+            listAll(albumRef).then((res) => {         
+                res.items.forEach(item => {
+                    getDownloadURL(item).then(url => {
+                        const myImg = document.createElement("img");
+                        myImg.src = url;
+                        document.getElementById('photos').appendChild(myImg);
+                    })
+                })
+            })
+        });
+
         myLi.innerText = `${myObj.name} ${myObj.year}`;
         myLi.appendChild(addPhotosBtn);
         myLi.appendChild(showPhotosBtn);
 
         myOl.appendChild(myLi);
     });
+})
+
+addPhotoBtn.addEventListener('click', () => {
+    const file = photoFile.files[0];
+    const fileRef = ref(storage, `${albumId.value}/${file.name}`);
+    uploadBytes(fileRef, file);
 })
