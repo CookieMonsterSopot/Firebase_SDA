@@ -187,25 +187,14 @@ const db = getFirestore(app);
 // })
 
 
-const empName = document.getElementById("name");
-const empSurname = document.getElementById("surname");
-const empDep = document.getElementById("department");
-const addEmp = document.getElementById("addEmployee");
+const albumName = document.getElementById("name");
+const albumYear = document.getElementById("year");
+const addAlbum = document.getElementById("addAlbum");
 
-addEmp.addEventListener("click", () => {
-    const employeesRef = collection(db, "employees");
-    addDoc(employeesRef, {
-        name: empName.value,
-        surname: empSurname.value,
-        department: empDep.value
-    }).then(() => {
-        empName.value = "";
-        empSurname.value = "";
-        empDep.value = "";
-
-        const userQuery = query(employeesRef, where("department", "==", "IT"));
-        getDocs(userQuery).then((docs) => {
-            console.log(docs.size);
-        })
+addAlbum.addEventListener("click", () => {
+    const albumsRef = collection(db, "albums");
+    addDoc(albumsRef, {
+        name: albumName.value,
+        year: albumYear.value
     })
 })
