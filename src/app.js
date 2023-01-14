@@ -2,7 +2,7 @@ import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
-import { getDatabase, ref as rtref, set } from "firebase/database";
+import { getDatabase, push, ref as rtref, set, update } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -312,7 +312,8 @@ const surname = document.getElementById("surname");
 const addBtn = document.getElementById("addBtn");
 
 addBtn.addEventListener("click", () => {
-    const userRef = rtref(rtdb, `users/${name.value}${surname.value}`);
+    const usersRef = rtref(rtdb, `users`);
+    const userRef = push(usersRef);
     set(userRef, {
         name: name.value,
         surname: surname.value
