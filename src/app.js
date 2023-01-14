@@ -2,7 +2,7 @@ import './../styles/styles.css'
 import { initializeApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
-import { getDatabase, push, ref as rtref, set, update } from "firebase/database";
+import { getDatabase, onValue, push, ref as rtref, set, update } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -310,6 +310,7 @@ const rtdb = getDatabase(app);
 const name = document.getElementById("name");
 const surname = document.getElementById("surname");
 const addBtn = document.getElementById("addBtn");
+const usersList = document.getElementById("usersList");
 
 addBtn.addEventListener("click", () => {
     const usersRef = rtref(rtdb, `users`);
@@ -320,3 +321,13 @@ addBtn.addEventListener("click", () => {
     })
 });
 
+const myRef = rtref(rtdb, 'users');
+onValue(myRef, (snapshot) => {
+    usersList.innerHTML = '';
+    snapshot.forEach(userSnapshot => {
+        const user = userSnapshot.val();
+        const li = document.createElement("li");
+        li.innerText = `${user.name} ${user.surname}`;
+        usersList.appendChild(li);
+    })
+})
