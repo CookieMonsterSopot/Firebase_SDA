@@ -387,17 +387,37 @@ const rtdb = getDatabase(app);
 const userName = document.getElementById('name');
 const userSurname = document.getElementById('surname');
 const userColor = document.getElementById('userColor');
+const userMessage = document.getElementById('message');
 
 //BUTTONS
 const addUserBtn = document.getElementById('add');
+const sendMessage = document.getElementById('send');
 
 //SELECTS
 const usersSelect = document.getElementById('users');
 
+//FORMS
+const messageForm = document.getElementById('messageForm');
+
 //REFS
 const usersRef = rtref(rtdb, 'users');
+const messagesRef = rtref(rtdb, 'messages');
 
 let selectedUser;
+
+sendMessage.addEventListener('click', () => {
+    const messageRef = push(messagesRef);
+
+    set(messageRef, {
+        userName: selectedUser.name,
+        userSurname: selectedUser.surname,
+        userColor: selectedUser.color,
+        text: userMessage.value,
+        date: new Date().toISOString()
+    }).then(() => {
+        userMessage.value = '';
+    })
+})
 
 usersSelect.addEventListener('change', () => {
     const userHeader = document.getElementById('selectedUser');
@@ -407,10 +427,12 @@ usersSelect.addEventListener('change', () => {
         userHeader.innerText = `${user.name} ${user.surname}`;
         userHeader.style.color = user.color;
         selectedUser = user;
+        messageForm.style.display = 'flex';
     }
     else {
         userHeader.innerText = '';
         selectedUser = undefined;
+        messageForm.style.display = 'none';
     }
 });
 

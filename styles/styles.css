@@ -20,3 +20,8 @@ img {
     padding-top: 10px;
     border-top-color: darkblue;
 }
+
+.message-input{
+    display: flex;
+    justify-content: center;
+}
