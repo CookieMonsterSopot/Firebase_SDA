@@ -413,6 +413,9 @@ const messagesContainer = document.getElementById('messages');
 const usersRef = rtref(rtdb, 'users');
 const messagesRef = rtref(rtdb, 'messages');
 
+//IMG
+const profileImg = document.getElementById('profile');
+
 let selectedUser;
 
 sendMessage.addEventListener('click', () => {
@@ -503,10 +506,12 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         greetings.innerText = `Hello ${user.displayName}!`;
         signOutBtn.style.display = "block";
+        profileImg.src = user.photoURL;
     }
     else {
         greetings.innerText = "Not logged in";
         signOutBtn.style.display = "none";
+        profileImg.src = '';
     }
 })
 
