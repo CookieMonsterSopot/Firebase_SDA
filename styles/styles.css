@@ -25,3 +25,15 @@ img {
     display: flex;
     justify-content: center;
 }
+
+.message {
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    margin-top: 10px;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+}

@@ -399,6 +399,9 @@ const usersSelect = document.getElementById('users');
 //FORMS
 const messageForm = document.getElementById('messageForm');
 
+//CONTAINERS
+const messagesContainer = document.getElementById('messages');
+
 //REFS
 const usersRef = rtref(rtdb, 'users');
 const messagesRef = rtref(rtdb, 'messages');
@@ -458,3 +461,23 @@ onChildAdded(usersRef, (userSnapshot) => {
 
     usersSelect.appendChild(option);
 });
+
+onChildAdded(messagesRef, (messageSnapshot) => {
+    const message = messageSnapshot.val();
+    const messageDiv = document.createElement('div');
+    const authorSpan = document.createElement('span');
+    const dateSpan = document.createElement('span');
+    const messageSpan = document.createElement('span');
+
+    authorSpan.innerText = `${message.userName} ${message.userSurname}`;
+    dateSpan.innerText = new Date(message.date).toLocaleString();
+    messageSpan.innerText = message.text;
+    messageSpan.style.color = message.userColor;
+
+    messageDiv.classList.add('message');
+    messageDiv.appendChild(authorSpan);
+    messageDiv.appendChild(dateSpan);
+    messageDiv.appendChild(messageSpan);
+
+    messagesContainer.appendChild(messageDiv);
+})
