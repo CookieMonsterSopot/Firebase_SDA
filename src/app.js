@@ -393,12 +393,14 @@ const userSurname = document.getElementById('surname');
 const userColor = document.getElementById('userColor');
 const userMessage = document.getElementById('message');
 const profilePhoto = document.getElementById('photoProfile');
+const profileColor = document.getElementById('profileColor');
 
 //BUTTONS
 const addUserBtn = document.getElementById('add');
 const sendMessage = document.getElementById('send');
 const signOutBtn = document.getElementById('signout');
 const updatePhotoBtn = document.getElementById('updatePhoto');
+const updateProfileColorBtn = document.getElementById('updateProfileColor');
 
 //SELECTS
 const usersSelect = document.getElementById('users');
@@ -531,4 +533,12 @@ updatePhotoBtn.addEventListener('click', () => {
             })
         })
     })
+})
+
+updateProfileColorBtn.addEventListener('click', () => {
+    const userDoc = doc(db, `users/${auth.currentUser.uid}`);
+
+    setDoc(userDoc, {
+        color: profileColor.value
+    });
 })
