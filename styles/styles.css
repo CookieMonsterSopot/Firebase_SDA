@@ -11,3 +11,12 @@ img {
     flex-direction: column;
     align-items: center;
 }
+
+.users {
+    margin-top: 10px;
+    text-align: center;
+    border-top-style: solid;
+    border-top-width: thick;
+    padding-top: 10px;
+    border-top-color: darkblue;
+}

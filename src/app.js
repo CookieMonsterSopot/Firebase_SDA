@@ -391,8 +391,13 @@ const userColor = document.getElementById('userColor');
 //BUTTONS
 const addUserBtn = document.getElementById('add');
 
+//SELECTS
+const usersSelect = document.getElementById('users');
+
+//REFS
+const usersRef = rtref(rtdb, 'users');
+
 addUserBtn.addEventListener('click', () => {
-    const usersRef = rtref(rtdb, 'users');
     const userRef = push(usersRef);
 
     set(userRef, {
@@ -404,4 +409,12 @@ addUserBtn.addEventListener('click', () => {
         userSurname.value = '';
         userColor.value = '';
     })
+});
+
+onChildAdded(usersRef, (userSnapshot) => {
+    const user = userSnapshot.val();
+    const option = document.createElement('option');
+    option.innerText = `${user.name} ${user.surname}`;
+
+    usersSelect.appendChild(option);
 });
