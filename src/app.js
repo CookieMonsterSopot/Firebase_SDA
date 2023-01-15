@@ -3,7 +3,7 @@ import { initializeApp, onLog } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { getDatabase, onChildAdded, onChildRemoved, onValue, push, ref as rtref, remove, set, update } from "firebase/database";
-import { getAuth, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+import { getAuth, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 import * as firebaseui from 'firebaseui';
 
 const firebaseConfig = {
@@ -396,6 +396,7 @@ const userMessage = document.getElementById('message');
 //BUTTONS
 const addUserBtn = document.getElementById('add');
 const sendMessage = document.getElementById('send');
+const signOutBtn = document.getElementById('signout');
 
 //SELECTS
 const usersSelect = document.getElementById('users');
@@ -496,8 +497,17 @@ ui.start('#firebaseui-auth-container', {
 });
 
 onAuthStateChanged(auth, (user) => {
+    const greetings = document.getElementById('greetings');
     if(user){
-        const greetings = document.getElementById('greetings');
         greetings.innerText = `Hello ${user.displayName}!`;
+        signOutBtn.style.display = "block";
     }
+    else {
+        greetings.innerText = "Not logged in";
+        signOutBtn.style.display = "none";
+    }
+})
+
+signOutBtn.addEventListener('click', () => {
+    signOut(auth);
 })
