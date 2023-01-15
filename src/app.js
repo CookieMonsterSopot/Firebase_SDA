@@ -397,6 +397,23 @@ const usersSelect = document.getElementById('users');
 //REFS
 const usersRef = rtref(rtdb, 'users');
 
+let selectedUser;
+
+usersSelect.addEventListener('change', () => {
+    const userHeader = document.getElementById('selectedUser');
+
+    if (usersSelect.value) {
+        const user = JSON.parse(usersSelect.value);
+        userHeader.innerText = `${user.name} ${user.surname}`;
+        userHeader.style.color = user.color;
+        selectedUser = user;
+    }
+    else {
+        userHeader.innerText = '';
+        selectedUser = undefined;
+    }
+});
+
 addUserBtn.addEventListener('click', () => {
     const userRef = push(usersRef);
 
@@ -415,6 +432,7 @@ onChildAdded(usersRef, (userSnapshot) => {
     const user = userSnapshot.val();
     const option = document.createElement('option');
     option.innerText = `${user.name} ${user.surname}`;
+    option.value = JSON.stringify(user);
 
     usersSelect.appendChild(option);
 });
