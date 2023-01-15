@@ -3,7 +3,7 @@ import { initializeApp, onLog } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { getDatabase, onChildAdded, onChildRemoved, onValue, push, ref as rtref, remove, set, update } from "firebase/database";
-import { getAuth, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 import * as firebaseui from 'firebaseui';
 
 const firebaseConfig = {
@@ -392,11 +392,13 @@ const userName = document.getElementById('name');
 const userSurname = document.getElementById('surname');
 const userColor = document.getElementById('userColor');
 const userMessage = document.getElementById('message');
+const profilePhoto = document.getElementById('photoProfile');
 
 //BUTTONS
 const addUserBtn = document.getElementById('add');
 const sendMessage = document.getElementById('send');
 const signOutBtn = document.getElementById('signout');
+const updatePhotoBtn = document.getElementById('updatePhoto');
 
 //SELECTS
 const usersSelect = document.getElementById('users');
@@ -498,7 +500,7 @@ ui.start('#firebaseui-auth-container', {
 
 onAuthStateChanged(auth, (user) => {
     const greetings = document.getElementById('greetings');
-    if(user){
+    if (user) {
         greetings.innerText = `Hello ${user.displayName}!`;
         signOutBtn.style.display = "block";
     }
@@ -510,4 +512,18 @@ onAuthStateChanged(auth, (user) => {
 
 signOutBtn.addEventListener('click', () => {
     signOut(auth);
+})
+
+updatePhotoBtn.addEventListener('click', () => {
+    const file = profilePhoto.files[0];
+
+    const photoFileRef = ref(storage, `${auth.currentUser.uid}/profilePhoto.jpg`);
+
+    uploadBytes(photoFileRef, file).then((res) => {
+        getDownloadURL(res.ref).then(url => {
+            updateProfile(auth.currentUser, {
+                photoURL: url
+            })
+        })
+    })
 })
