@@ -344,41 +344,64 @@ const rtdb = getDatabase(app);
 // })
 
 
-const name = document.getElementById("name");
-const addBtn = document.getElementById("addBtn");
-const docsList = document.getElementById("docsList");
-const docText = document.getElementById("docText");
-const docsRef = rtref(rtdb, `docs`);
+// const name = document.getElementById("name");
+// const addBtn = document.getElementById("addBtn");
+// const docsList = document.getElementById("docsList");
+// const docText = document.getElementById("docText");
+// const docsRef = rtref(rtdb, `docs`);
 
-addBtn.addEventListener("click", () => {    
-    const docRef = push(docsRef);
-    set(docRef, {
-        name: name.value,
-        text: ''
+// addBtn.addEventListener("click", () => {    
+//     const docRef = push(docsRef);
+//     set(docRef, {
+//         name: name.value,
+//         text: ''
+//     })
+// });
+
+
+// onChildAdded(docsRef, (docSnapshot) => {
+//     const myDoc = docSnapshot.val();
+//     const li = document.createElement("li");
+//     li.innerText = `${myDoc.name}`;
+
+//     const btnEdit = document.createElement("button");
+//     btnEdit.addEventListener("click", () => {
+//         onValue(docSnapshot.ref, (currSnapshot) => {
+//             docText.innerText = currSnapshot.val().text;
+//         });
+
+//         docText.addEventListener('change', () => {
+//             update(docSnapshot.ref, {
+//                 text: docText.value
+//             })
+//         })
+//     })
+
+//     btnEdit.innerText = "Edit";
+//     li.appendChild(btnEdit);
+
+//     docsList.appendChild(li);
+// })
+
+//INPUTS
+const userName = document.getElementById('name');
+const userSurname = document.getElementById('surname');
+const userColor = document.getElementById('userColor');
+
+//BUTTONS
+const addUserBtn = document.getElementById('add');
+
+addUserBtn.addEventListener('click', () => {
+    const usersRef = rtref(rtdb, 'users');
+    const userRef = push(usersRef);
+
+    set(userRef, {
+        name: userName.value,
+        surname: userSurname.value,
+        color: userColor.value
+    }).then(() => {
+        userName.value = '';
+        userSurname.value = '';
+        userColor.value = '';
     })
 });
-
-
-onChildAdded(docsRef, (docSnapshot) => {
-    const myDoc = docSnapshot.val();
-    const li = document.createElement("li");
-    li.innerText = `${myDoc.name}`;
-
-    const btnEdit = document.createElement("button");
-    btnEdit.addEventListener("click", () => {
-        onValue(docSnapshot.ref, (currSnapshot) => {
-            docText.innerText = currSnapshot.val().text;
-        });
-        
-        docText.addEventListener('change', () => {
-            update(docSnapshot.ref, {
-                text: docText.value
-            })
-        })
-    })
-
-    btnEdit.innerText = "Edit";
-    li.appendChild(btnEdit);
-
-    docsList.appendChild(li);
-})
