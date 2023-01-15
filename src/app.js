@@ -3,6 +3,8 @@ import { initializeApp, onLog } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { getDatabase, onChildAdded, onChildRemoved, onValue, push, ref as rtref, remove, set, update } from "firebase/database";
+import { getAuth, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+import * as firebaseui from 'firebaseui';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRyRzHOt2MVxcea47Z5U_5rV51_-YQUfU",
@@ -19,6 +21,8 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const db = getFirestore(app);
 const rtdb = getDatabase(app);
+const auth = getAuth(app);
+const ui = new firebaseui.auth.AuthUI(auth);
 
 // const myImageRef = ref(storage, "nazwaFolder/ZdjęcieCV.png");
 // const myImg = document.createElement("img");
@@ -480,4 +484,20 @@ onChildAdded(messagesRef, (messageSnapshot) => {
     messageDiv.appendChild(messageSpan);
 
     messagesContainer.appendChild(messageDiv);
+})
+
+
+ui.start('#firebaseui-auth-container', {
+    signInOptions: [
+        EmailAuthProvider.PROVIDER_ID,
+        GoogleAuthProvider.PROVIDER_ID
+    ],
+    signInSuccessUrl: "http://localhost:8080/"
+});
+
+onAuthStateChanged(auth, (user) => {
+    if(user){
+        const greetings = document.getElementById('greetings');
+        greetings.innerText = `Hello ${user.displayName}!`;
+    }
 })
